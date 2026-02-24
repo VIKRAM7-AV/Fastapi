@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body, Form, UploadFile, File
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -40,4 +40,28 @@ def create_item(item: Item):
         "Name":item.name,
         "price":item.price,
         "Offer":item.is_offer
+    }
+
+
+@app.post("/items2/")
+def plaintext(contant:str = Body(..., media_type="text/plain")):
+    return {
+        "type": "plaintext",
+        "content": contant
+    }
+
+@app.post("/items3/")
+def CreateForm(Username:str = Form(...), Password:str = Form(...)):
+    return {
+        "type": "form",
+        "Username": Username,
+        "Password": Password
+    }
+
+@app.post("/items4/")
+def CreateFile(file: UploadFile = File(...)):
+    return {
+        "type": "file",
+        "filename": file.filename,
+        "content_type": file.content_type
     }
